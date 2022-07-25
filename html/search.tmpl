@@ -1,0 +1,76 @@
+{{define "search.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>查询</title>
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+        <style type="text/css">
+            .myblock{
+                display: inline-block;
+            }
+            .Search-box{
+                width: 620px;
+                height: 50px;
+                margin: 50px auto;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="Search-box">
+        <form action="/result" method="post">
+            <div class="form-group myblock">
+                <select class="form-select" name="classify" id="classify">
+                    <option value="" selected="selected">分类</option>
+                    <option value="自然类基本学科">自然类基本学科</option>
+                    <option value="人文类基本学科">人文类基本学科</option>
+                </select>
+            </div>
+            <div class="form-group myblock">
+                <select class="form-select" name="type" id="type">
+                    <option value="" selected="selected">类型</option>
+                    <option value="图书">图书</option>
+                    <option value="杂志">杂志</option>
+                    <option value="论文">论文</option>
+                    <option value="报刊">报刊</option>
+                    <option value="新闻媒体">新闻媒体</option>
+                </select>
+            </div>
+            <section class="navbar-section myblock">
+                <div class="input-group input-inline">
+                    <input autocomplete="off" class="form-input" type="text" placeholder="请输入书名" name="name" id="name">
+                    <input id="submit" type="submit" class="btn btn-primary input-group-btn" value="查询"/>
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="mytable">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>书名</th>
+                <th>索引号</th>
+                <th>分类</th>
+                <th>类型</th>
+                <th>剩余数量</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $k,$v := .tables}}
+                <tr class="active">
+                    <td>{{$v.Name}}</td>
+                    <td>{{$v.Index}}</td>
+                    <td>{{$v.Classify}}</td>
+                    <td>{{$v.Type}}</td>
+                    <td>{{$v.Num}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
+    </body>
+    </html>
+{{end}}

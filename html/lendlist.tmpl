@@ -1,0 +1,67 @@
+{{define "lendlist.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>借阅人员名单</title>
+        <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+        <!-- 引入 layui.js -->
+        <script src="http://unpkg.com/layui@2.6.8/dist/layui.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>学院</th>
+            <th>借阅者</th>
+            <th>借阅者学号</th>
+            <th>书名</th>
+            <th>索引号</th>
+            <th>身份</th>
+            <th>借阅日期</th>
+            <th>预计归还日期</th>
+            <th>备注</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range $k,$v := .results}}
+            <tr>
+                <td>{{$v.Academy}}</td>
+                <td>{{$v.Name}}</td>
+                <td>{{$v.StudentId}}</td>
+                <td>{{$v.BookName}}</td>
+                <td>{{$v.Index}}</td>
+                <td>{{$v.Status}}</td>
+                <td>{{$v.StartDate}}</td>
+                <td>{{$v.ReturnDate}}</td>
+                <td>{{$v.Seashell}}</td>
+                <td><button class="layui-btn layui-btn-danger" id="delete"
+                            onclick="returnbook({{$v.Index}},{{$v.StudentId}})">归还</button></td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+    </body>
+    <script>
+        function returnbook(myindex,studentid){
+            layui.use(['element', 'layer', 'util'], function(){
+                layer.confirm("确认要归还"+studentid+"("+myindex+")吗?", { icon: 6, title: "提示", offset: "auto", skin: 'layui-layer-molv', anim: 5 }, function (index) {
+                    window.location.href = "http://localhost:8082/return?&studentid="+studentid+"&index="+myindex;
+                    layer.close(index);
+                    layer.msg("归还成功", { icon: 1, offset: "auto", time:2000 });
+
+
+                });
+
+            });
+        }
+    </script>
+    </html>
+
+{{end}}

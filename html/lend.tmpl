@@ -1,0 +1,109 @@
+{{define "lend.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>借阅</title>
+        <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+        <!-- 引入 layui.js -->
+        <script src="http://unpkg.com/layui@2.6.8/dist/layui.js" type="text/javascript" charset="utf-8"></script>
+
+    </head>
+    <body>
+    <form class="layui-form" action="/insert" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label">书名</label>
+            <div class="layui-input-block">
+                <input type="text" name="BookName" required  lay-verify="required" placeholder="请填写书名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">索引号</label>
+            <div class="layui-input-block">
+                <input type="text" name="Index" required  lay-verify="required" placeholder="请填写索引号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">借阅人姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="Name" required lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">借阅人学号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="StudentId" required lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">学院</label>
+            <div class="layui-input-block">
+                <select name="Academy" lay-verify="required">
+                    <option value=""></option>
+                    <option value="航空学院">航空学院</option>
+                    <option value="交通土建学院">交通土建学院</option>
+                    <option value="艺术学院">艺术学院</option>
+                    <option value="信电学院">信电学院</option>
+                    <option value="经管学院">经管学院</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <label class="layui-form-label">借阅日期</label>
+            <input type="text" name="StartDate" class="layui-input-block" placeholder="请选择借阅日期" id="date">
+        </div><br>
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <label class="layui-form-label">归还日期</label>
+            <input type="text" name="ReturnDate" class="layui-input-block" placeholder="请选择预计归还日期" id="date">
+        </div>
+        <br>
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <label class="layui-form-label">身份</label>
+            <input type="radio" name="Status" value="学生" title="学生" checked>
+            <input type="radio" name="Status" value="教师" title="教师">
+            <input type="radio" name="Status" value="校外人员" title="校外人员">
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="Seashell" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="submit" id="submit" class="layui-btn" lay-submit lay-filter="formDemo" value="提交"/>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        //Demo
+        layui.use(['form','laydate'], function(){
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#date' //指定元素
+            });
+
+            //监听提交
+            /* form.on('submit(formDemo)', function(data){
+              layer.msg(JSON.stringify(data.field));
+              return false;
+            }); */
+            form.on('submit(formDemo)',function(data){
+                layer.msg("提交成功！");
+                return true;
+            });
+            /*documeng.getElementById("submit").onclick = function(){
+                layer.msg("提交成功！");
+            }*/
+        });
+    </script>
+    </body>
+    </html>
+
+{{end}}

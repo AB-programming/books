@@ -1,0 +1,245 @@
+{{define "main.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>图书管理系统</title>
+        <!-- 引入 layui.css -->
+        <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+        <!-- 引入 layui.js -->
+        <script src="http://unpkg.com/layui@2.6.8/dist/layui.js" type="text/javascript" charset="utf-8"></script>
+
+    </head>
+    <body>
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo layui-hide-xs layui-bg-black">图书管理系统 </div>
+            <!-- 头部区域（可配合layui 已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <!-- 移动端显示 -->
+                <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+                    <i class="layui-icon layui-icon-spread-left"></i>
+                </li>
+
+                <li class="layui-nav-item layui-hide-xs"><a href="">人文类基本学科</a></li>
+                <li class="layui-nav-item layui-hide-xs"><a href="">自然类基本学科</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">类型</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">全部</a></dd>
+                        <dd><a href="">图书</a></dd>
+                        <dd><a href="">杂志</a></dd>
+                        <dd><a href="">论文</a></dd>
+                        <dd><a href="">报刊</a></dd>
+                        <dd><a href="">新闻媒体</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                    <a href="javascript:;">
+                        <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                        <span>{{.admin.Nickname}}</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a id="admin">个人信息</a></dd>
+                        <dd><a href="">设置</a></dd>
+                        <dd><a href="http://localhost:8082/exit">退出登录</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+                    <a href="javascript:;">
+                        <i class="layui-icon layui-icon-more-vertical"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">首页</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">首页展示</a></dd>
+                            <dd><a href="javascript:;" id="lend">书籍借阅</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">菜单</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" id="search">查询书籍</a></dd>
+                            <dd><a href="javascript:;" id="add">添加书籍</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="http://localhost:8082/lendlist">借阅名单</a></li>
+                    <li class="layui-nav-item"><a href="">设置</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <table class="layui-table">
+                <colgroup>
+                    <col width="150">
+                    <col width="200">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>书名</th>
+                    <th>索引号</th>
+                    <th>分类</th>
+                    <th>类型</th>
+                    <th>剩余数量</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range $k,$v := .lists}}
+                    <tr>
+                        <td>{{$v.Name}}</td>
+                        <td>{{$v.Index}}</td>
+                        <td>{{$v.Classify}}</td>
+                        <td>{{$v.Type}}</td>
+                        <td>{{$v.Num}}</td>
+                        <td><button class="layui-btn layui-btn-danger" id="delete"
+                                    onclick="dels({{$v.Index}},{{$v.Name}})">删除</button></td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+
+        </div>
+    </div>
+    <script>
+        //JS
+        layui.use(['element', 'layer', 'util'], function(){
+            var element = layui.element
+                ,layer = layui.layer
+                ,util = layui.util
+                ,$ = layui.$;
+
+            //头部事件
+            util.event('lay-header-event', {
+                //左侧菜单事件
+                menuLeft: function(othis){
+                    layer.msg('展开左侧菜单的操作', {icon: 0});
+                }
+                ,menuRight: function(){
+                    layer.open({
+                        type: 1
+                        ,content: '<div style="padding: 15px;"><table class="layui-table admin"><colgroup> <col width="150"> <col width="200"> <col> </colgroup> <thead> <tr> <th>登录历史记录</th> </tr> </thead> <tbody>{{range $k,$v := .times}}<tr> <th>{{$v.Time}}</th> </tr>{{end}}</tbody> </table></div>'
+                        ,area: ['260px', '100%']
+                        ,offset: 'rt' //右上角
+                        ,anim: 5
+                        ,shadeClose: true
+                    });
+                }
+            });
+            $('#lend').on("click",function(){
+                var index = layer.open({
+                    title:"书籍借阅",
+                    area:['1000px','600px'],
+                    shadeClose:true,
+                    anim:1,
+                    type: 2,
+                    content: 'http://localhost:8082/lend',
+                    success: function(layero, index){
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                        var iframeDocument = iframeWindow.document;
+                        var submit = iframeDocument.getElementById("submit");
+                        console.log(submit)
+                        submit.onclick = function(){
+                            layer.msg('借阅成功', {icon: 6});
+                            layer.close(index,function (){
+                                window.setTimeout(function () {
+                                    window.location.reload();
+                                },500)
+                            });
+                        }
+                    },
+                });
+            });
+
+            $('#search').on("click",function(){
+                var index = layer.open({
+                    title:"添加书籍",
+                    area:['1200px','700px'],
+                    shadeClose:true,
+                    anim:1,
+                    type: 2,
+                    content: 'http://localhost:8082/search',
+                    success: function(layero, index){
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                        var iframeDocument = iframeWindow.document;
+                        var submit = iframeDocument.getElementById("submit");
+                        console.log(submit)
+                    },
+                });
+            });
+
+            $('#add').on("click",function(){
+                var index = layer.open({
+                    title:"查询书籍",
+                    area:['1000px','600px'],
+                    shadeClose:true,
+                    anim:1,
+                    type: 2,
+                    content: 'http://localhost:8082/add',
+                    success: function(layero, index){
+                        var iframeWindow = window['layui-layer-iframe' + index]
+                        var iframeDocument = iframeWindow.document;
+                        var submit = iframeDocument.getElementById("submit");
+                        console.log(submit)
+                        submit.onclick = function(){
+                            layer.msg('添加成功', {icon: 6});
+                            layer.close(index,function (){
+                                window.setTimeout(function () {
+                                    window.location.reload();
+                                },500)
+                            });
+                        }
+                    },
+                });
+            });
+
+            $('#admin').on("click",function(){
+                layer.open({
+                    title:"管理员信息",
+                    area:['200px','750px'],
+                    shadeClose:true,
+                    anim:1,
+                    type: 2,
+                    content: 'http://localhost:8082/admin',
+                    offset: 'rb'
+                });
+            });
+
+        });
+        function dels(deleteid,deletename){
+            layui.use(['element', 'layer', 'util'], function(){
+                layer.confirm("确认要移除"+deletename+"("+deleteid+")吗?", { icon: 6, title: "提示", offset: "auto", skin: 'layui-layer-molv', anim: 5 }, function (index) {
+                    document.location.href = "http://localhost:8082/delete?id="+deleteid;
+                    layer.close(index);
+                    layer.msg("删除成功", { icon: 1, offset: "auto", time:2000 });
+
+
+                });
+
+            });
+        }
+        window.onload = function (){
+            layer.msg("欢迎"+{{.admin.Nickname}}, { icon: 1, offset: "auto", time:2000 });
+        }
+    </script>
+    </body>
+    </html>
+{{end}}

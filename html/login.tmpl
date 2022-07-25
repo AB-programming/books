@@ -1,0 +1,212 @@
+{{define "login.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>图书馆里系统管理员登录</title>
+        <style type="text/css">
+            /* #Reset & Basics (Inspired by E. Meyers)
+            ================================================== */
+            html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font-size: 100%;
+                font: inherit;
+                vertical-align: baseline; }
+            article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+                display: block; }
+            body {
+                line-height: 1; }
+            ol, ul {
+                list-style: none; }
+            blockquote, q {
+                quotes: none; }
+            blockquote:before, blockquote:after,
+            q:before, q:after {
+                content: '';
+                content: none; }
+            table {
+                /*border-collapse: collapse;*/
+                border-spacing: 0; }
+
+            /* #Basic Styles
+            ================================================== */
+            body {
+                background:#87CEFA;
+                overflow:hidden;
+                font:normal 16px/1.5 Helvetica, "Microsoft Yahei", Arial, sans-serif;
+                color:#444;
+                -webkit-font-smoothing:antialiased; /* Fix for webkit rendering */
+                -webkit-text-size-adjust:100%;
+            }
+            input {padding:10px 15px;outline:0;border:0;border-radius:3px;width:200px;}
+            a, a:visited { color: #333; text-decoration: none; outline: 0; }
+            a:hover, a:focus { color: #000;}
+
+            /*云层*/
+            #clouds{position:absolute;top:0;right:0;bottom:0;left:0;}
+            [class^="cloud-"]{position:absolute;right:120%;width:200px;height:60px;background:white;-webkit-border-radius:200px;-moz-border-radius:200px;border-radius:200px;}
+            [class^="cloud-"]:before,[class^="cloud-"]:after{content:'';position:absolute;top:-15px;left:10px;width:100px;height:80px;background:#fff;-webkit-border-radius:100px;border-radius:100px;-webkit-transform:rotate(30deg);-moz-transform:rotate(30deg);transform:rotate(30deg);}
+            [class^="cloud-"]:after {top: -55px;left: auto;right: 15px;width: 120px;height: 120px;}
+            .cloud-1 {top: 50px;-webkit-animation: moveclouds 30s linear infinite;-moz-animation: moveclouds 30s linear infinite;-o-animation: moveclouds 30s linear infinite;animation: moveclouds 30s linear infinite;}
+            .cloud-2 {top: 100px;opacity: 0.8;-webkit-transform: scale(0.8);-moz-transform: scale(0.8);transform: scale(0.8);-webkit-animation: moveclouds 45s linear infinite;-moz-animation: moveclouds 45s linear infinite;-o-animation: moveclouds 45s linear infinite;animation: moveclouds 45s linear infinite;-webkit-animation-delay: 5s;-moz-animation-delay: 5s;animation-delay: 5s;}
+            .cloud-3 {top: 150px;opacity: 0.6;-webkit-transform: scale(0.6);-moz-transform: scale(0.6);transform: scale(0.6);-webkit-animation: moveclouds 40s linear infinite;-moz-animation: moveclouds 40s linear infinite;-o-animation: moveclouds 40s linear infinite;animation: moveclouds 40s linear infinite;}
+            .cloud-4 {top: 200px;opacity: 0.75;-webkit-transform: scale(0.75);-moz-transform: scale(0.75);transform: scale(0.75);-webkit-animation: moveclouds 26s linear infinite;-moz-animation: moveclouds 26s linear infinite;-o-animation: moveclouds 26s linear infinite;animation: moveclouds 26s linear infinite;-webkit-animation-delay: 8s;-moz-animation-delay: 8s;animation-delay: 8s;}
+            /*云层移动*/
+            @-webkit-keyframes moveclouds {
+                0%   { right: -20%; }
+                100% { right: 120%; }
+            }
+            @-moz-keyframes moveclouds {
+                0%   { right: -20%; }
+                100% { right: 120%; }
+            }
+            @-o-keyframes moveclouds {
+                0%   { right: -20%; }
+                100% { right: 120%; }
+            }
+
+
+            /* #Content Styles
+            ================================================== */
+            /*内容*/
+            #content{width:100%;}
+            .container{width:960px;margin:0 auto;text-align:center;}
+            /*登录/注册*/
+            #login,#register{width:400px;height:380px;position:absolute;top:50%;left:50%;margin-top:-200px;margin-left:-200px;background:#F8F8F8;border-radius:10px;box-shadow:0 3px 6px rgba(0, 0, 0, 0.5);}
+            #register{left:120%;}
+            #login_header,#register_header{height:60px;line-height:60px;font-size:20px;font-weight:bold;color:#77CA60;background:#FFF;border-radius:10px 10px 0 0;-webkit-box-shadow:0 1px 3px rgba(0, 0, 0, .1);-moz-box-shadow:0 1px 3px rgba(0, 0, 0, .1);box-shadow:0 1px 3px rgba(0, 0, 0, .1);}
+            .icon-home{font-size:30px;position:relative;top:3px;}
+
+            #login_content,#register_content{height:200px;padding:30px 20px;}
+            input{width:300px;padding:14px 15px;background:#F0F0F0;font:normal 16px/1.5 Helvetica,"Microsoft Yahei",Arial,sans-serif;color:#444;}
+            span{position:relative;display:inline-block;height:50px;margin-bottom:30px;}
+            .tip{text-indent:80px;-webkit-transition:all .3s ease-in-out;-moz-transition:all .3s ease-in-out;transition:all .3s ease-in-out;}
+            .tip:focus,.tip:active{text-indent:0;}
+            .tip + label{position:absolute;top:16px;left:15px;-webkit-transition:all .3s ease-in-out;-moz-transition:all .3s ease-in-out;transition:all .3s ease-in-out;}
+            .tip:focus + label,.tip:active + label{-webkit-transform:translateY(-40px);-moz-transform:translateY(-40px);transform:translateY(-40px);}
+            .icon-user,.icon-lock{position:absolute;top:16px;right:14px;color:#999;}
+            .tooltip{width:200px;padding:14px;position:absolute;left:20%;top:0;right:0;color:#999;background:white;text-align:left;z-index:-1;box-shadow:0 1px 3px rgba(0, 0, 0, .1);}
+            .tooltip:after{width:0;height:0;content:"";position:absolute;right:100%;top:18px;color:#87CEFA;border:8px solid;border-right-color:white;}
+
+            #login_footer,#register{}
+            #login_btn,#register_btn{width:100%;height:60px;line-height:60px;outline:0;border:none;color:white;font-weight:bold;font-size:20px;background:#77CA60;border-radius:0 0 10px 10px;cursor:pointer;text-shadow:1px 1px 1px rgba(0, 0, 0, 0.3);}
+            .ing{width:100%;height:5px;position:absolute;bottom:60px;}
+
+            #register_link,#login_link{width:80px;display:block;margin:20px auto;color:white;border-bottom:1px dashed;}
+
+            /*下拉菜单*/
+            .option{width:330px;position:absolute;margin:0 0 0 15px;text-align:left;background:#F0F0F0;cursor:pointer;border-radius:3px;}
+            .option_result{display:inline-block;padding:11px 15px;}
+            .option_arrow{padding:10px 19px;float:right;}
+            .option_arrow .arrow{width:0;height:0;font-size:0;border:6px solid;border-color:#6F7880 #F0F0F0 #F0F0F0;}
+            .option_list{background:#F3F3F3;display:none;}
+            .option_list li{padding:10px 15px;float:none;}
+            .option_list li:hover{background:#DFDFDF;}
+        </style>
+    </head>
+    <body>
+    <!-- 背景云层 -->
+    <div id="header">
+        <div id="clouds">
+            <div class="cloud-1" data-speed="35000"></div>
+            <div class="cloud-2" data-speed="45000" data-delay="15000"></div>
+            <div class="cloud-3" data-speed="40000"></div>
+            <div class="cloud-4" data-speed="38000" data-delay="20000"></div>
+        </div>
+    </div><!-- / #header -->
+
+    <div id="content">
+        <div class="container">
+            <!-- 登录模块 -->
+            <form id="login" method="post" action="/login" onsubmit="return checkForm(this);">
+                <div id="login_header"><i class="icon-home"></i>图书管理系统管理员登录</div>
+
+                <div id="login_content">
+		                    <span>
+		                        <input class="tip" name="username" type="text"
+                                       autocomplete="off" maxlength="18" onclick="onClick(this);" onblur="onBlur(this);">
+		                        <label for="username">用户名</label>
+		                        <i class="icon-user"></i>
+		                        <div class="tooltip" data-text="填写您的身份证号">填写您的身份证号</div>
+		                    </span>
+                    <span>
+		                        <input class="tip" name="password" type="password"
+                                       autocomplete="off" maxlength="16" onclick="onClick(this);" onblur="onBlur(this);">
+		                        <label for="password">密码</label>
+		                        <i class="icon-lock"></i>
+		                        <div class="tooltip" data-text="填写您的密码">填写您的密码</div>
+		                    </span>
+                </div><!-- / #login_content -->
+
+                <div id="login_footer">
+                    <div class="ing"></div>
+                    <button id="login_btn" type="submit">登录</button>
+                </div><!-- / #login_footer -->
+            </form><!-- / #login -->
+        </div><!-- / .container -->
+    </div><!-- / #content-->
+
+    <div id="footer">
+
+        <div class="container">
+
+        </div><!-- / .container -->
+
+    </div><!-- / #footer -->
+
+    <script type="text/javascript">
+        /**
+         * 输入框被点击
+         */
+        function onClick(){
+
+            //对函数的第一个参数进行判断
+            if (arguments[0]) {
+                var obj = arguments[0];
+            }else{
+                return false;
+            }
+
+            //获取.tooltip
+            var tooltip = $(obj).siblings('.tooltip');
+            //.tooltip如果存在，就滑出
+            if (tooltip.length != 0) {
+                //对函数第二个参数进行判断
+                if (arguments[1]) {
+                    var text = arguments[1];
+                }else{
+                    text = tooltip.data('text');
+                }
+                //设置提示框文字
+                tooltip.text(text);
+                //滑出提示框
+                tooltip.animate({left:'120%'});
+            };
+        }
+
+        /**
+         * 输入框失去焦点
+         */
+        function onBlur(){
+            //对函数的第一个参数进行判断
+            if (arguments[0]) {
+                var obj = arguments[0];
+            }else{
+                return false;
+            }
+
+            //获取.tooltip
+            var tooltip = $(obj).siblings('.tooltip');
+            //.tooltip如果存在，就滑入
+            if (tooltip.length != 0) {
+                tooltip.animate({left:'20%'});
+            };
+        }
+
+    </script>
+    </body>
+    </html>
+{{end}}
